@@ -263,7 +263,7 @@ exports.book_delete_post = (req, res, next) => {
   );
 };
 
-// Display book update form on GET.
+// Display Book update form on GET.
 exports.book_update_get = (req, res, next) => {
   // Get book, authors and genres for form.
   async.parallel(
