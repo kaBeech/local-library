@@ -172,7 +172,7 @@ exports.bookinstance_update_get = (req, res, next) => {
   // Get book instance and books for form.
   async.parallel(
     {
-      book_instance(callback) {
+      bookinstance(callback) {
         BookInstance.findById(req.params.id).populate("book").exec(callback);
       },
       books(callback) {
@@ -183,7 +183,7 @@ exports.bookinstance_update_get = (req, res, next) => {
       if (err) {
         return next(err);
       }
-      if (results.book_instance == null) {
+      if (results.bookinstance == null) {
         // No results.
         const err = new Error("Book Instance not found");
         err.status = 404;
@@ -192,7 +192,7 @@ exports.bookinstance_update_get = (req, res, next) => {
       // Success.
       res.render("bookinstance_form", {
         title: "Update Book Instance",
-        book_instance: results.book_instance,
+        bookinstance: results.bookinstance,
         book: results.book,
         book_list: results.books,
       });
@@ -255,7 +255,7 @@ exports.bookinstance_update_post = [
           res.render("bookinstance_form", {
             title: "Update Book Instance",
             book_list: results.book_list,
-            selected_book: results.book._id,
+            selected_book: results.book,
             // selected_status: results.status,
             bookinstance,
             errors: errors.array(),
@@ -266,13 +266,18 @@ exports.bookinstance_update_post = [
     }
 
     // Data from form is valid. Update the record.
-    Book.findByIdAndUpdate(req.params.id, book, {}, (err, thebook) => {
-      if (err) {
-        return next(err);
-      }
+    BookInstance.findByIdAndUpdate(
+      req.params.id,
+      bookinstance,
+      {},
+      (err, thebookinstance) => {
+        if (err) {
+          return next(err);
+        }
 
-      // Successful: redirect to book detail page.
-      res.redirect(thebook.url);
-    });
+        // Successful: redirect to book detail page.
+        res.redirect(thebookinstance.url);
+      }
+    );
   },
 ];

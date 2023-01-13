@@ -14,6 +14,7 @@ block content
       input#date_of_birth.form-control(type='date' placeholder='dd/mm/yyyy' name='date_of_birth' value=(undefined===author ? '' : author.date_of_birth) )
       label(for='date_of_death') Date of death:
       input#date_of_death.form-control(type='date' placeholder='dd/mm/yyyy' name='date_of_death' value=(undefined===author ? '' : author.date_of_death) )
+    a(href=(undefined===author ) ? `/catalog/authors` : `/catalog/author/${author._id}`) Go back       
     button.btn.btn-primary(type='submit') Submit
   if errors
     ul
