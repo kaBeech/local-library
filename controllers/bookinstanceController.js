@@ -95,7 +95,6 @@ exports.bookinstance_create_post = [
           title: "Create BookInstance",
           book_list: books,
           selected_book: bookinstance.book._id,
-          // selected_status: bookinstance.status,
           errors: errors.array(),
           bookinstance,
         });
@@ -167,9 +166,9 @@ exports.bookinstance_delete_post = (req, res, next) => {
   );
 };
 
-// Display book instance update form on GET.
+// Display Book Instance update form on GET.
 exports.bookinstance_update_get = (req, res, next) => {
-  // Get book instance and books for form.
+  // Get bookinstance and books for form.
   async.parallel(
     {
       bookinstance(callback) {
@@ -190,11 +189,20 @@ exports.bookinstance_update_get = (req, res, next) => {
         return next(err);
       }
       // Success.
+      // // Mark our selected genres as checked.
+      // for (const genre of results.genres) {
+      //   for (const bookGenre of results.book.genre) {
+      //     if (genre._id.toString() === bookGenre._id.toString()) {
+      //       genre.checked = "true";
+      //     }
+      //   }
+      // }
       res.render("bookinstance_form", {
         title: "Update Book Instance",
-        bookinstance: results.bookinstance,
-        book: results.book,
         book_list: results.books,
+        bookinstance: results.bookinstance,
+        selected_book: results.bookinstance.book,
+        selected_status: results.bookinstance.status,
       });
     }
   );
@@ -256,7 +264,7 @@ exports.bookinstance_update_post = [
             title: "Update Book Instance",
             book_list: results.book_list,
             selected_book: results.book,
-            // selected_status: results.status,
+            selected_status: results.status,
             bookinstance,
             errors: errors.array(),
           });
@@ -275,7 +283,7 @@ exports.bookinstance_update_post = [
           return next(err);
         }
 
-        // Successful: redirect to book detail page.
+        // Successful: redirect to bookinstance detail page.
         res.redirect(thebookinstance.url);
       }
     );

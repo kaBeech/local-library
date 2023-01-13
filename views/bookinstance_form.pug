@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  h1= title
+  h1=title
 
   form(method='POST' action='')
     div.form-group
@@ -9,24 +9,23 @@ block content
       select#book.form-control(type='select' placeholder='Select book' name='book' required='true')
         - book_list.sort(function(a, b) {let textA = a.title.toUpperCase(); let textB = b.title.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
         for book in book_list
-          option(value=book._id, selected=(selected_book==bookinstance.book._id || selected_book==bookinstance.book ? 'selected' : false) ) #{book.title}
+          option(value=book._id, selected=(selected_book==book._id.toString() || selected_book==book.toString() ? 'selected' : false) ) #{book.title}
 
     div.form-group
       label(for='imprint') Imprint:
       input#imprint.form-control(type='text' placeholder='Publisher and date information' name='imprint' required='true' value=(undefined===bookinstance ? '' : bookinstance.imprint))
     div.form-group
       label(for='due_back') Date when book available:
-      input#due_back.form-control(type='date' placeholder='dd/mm/yyyy' name='due_back' value=(undefined===bookinstance ? '' : bookinstance.due_back))
+      input#due_back.form-control(type='date' name='due_back' value=(undefined===bookinstance ? '' : bookinstance.due_back))
 
     div.form-group
       label(for='status') Status:
-      //- select#status.form-control(type='select' placeholder='Select status' value=(undefined===bookinstance ? '' : bookinstance.status)  name='status' required='true')
       select#status.form-control(type='select' placeholder='Select status' name='status' required='true')
-        option(value='Maintenance') Maintenance
-        option(value='Available') Available
-        option(value='Loaned') Loaned
-        option(value='Reserved') Reserved
-
+        option(value='Maintenance', selected=(selected_status=='Maintenance' ? 'selected' : false)) Maintenance
+        option(value='Available', selected=(selected_status=='Available' ? 'selected' : false)) Available
+        option(value='Loaned', selected=(selected_status=='Loaned' ? 'selected' : false)) Loaned
+        option(value='Reserved', selected=(selected_status=='Reserved' ? 'selected' : false)) Reserved
+    a(href=(undefined===bookinstance ) ? `/catalog/bookinstances` : `/catalog/bookinstance/${bookinstance._id}`) Go back  
     button.btn.btn-primary(type='submit') Submit
 
   if errors
