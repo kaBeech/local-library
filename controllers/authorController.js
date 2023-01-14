@@ -186,29 +186,22 @@ exports.author_delete_post = (req, res, next) => {
 // Display Author update form on GET.
 exports.author_update_get = (req, res, next) => {
   // Get author for form.
-  async.parallel(
-    {
-      author(callback) {
-        Author.findById(req.params.id).exec(callback);
-      },
-    },
-    (err, results) => {
-      if (err) {
-        return next(err);
-      }
-      if (results.author == null) {
-        // No results.
-        const err = new Error("Author not found");
-        err.status = 404;
-        return next(err);
-      }
-      // Success.
-      res.render("author_form", {
-        title: "Update Author",
-        author: results.author,
-      });
+  Author.findById(req.params.id).exec(function (err, author) {
+    if (err) {
+      return next(err);
     }
-  );
+    if (author == null) {
+      // No results.
+      const err = new Error("Author not found");
+      err.status = 404;
+      return next(err);
+    }
+    // Success.
+    res.render("author_form", {
+      title: "Update Author",
+      author,
+    });
+  });
 };
 
 // Handle author update on POST.
@@ -255,17 +248,10 @@ exports.author_update_post = [
 
     if (!errors.isEmpty()) {
       // There are errors. Render form again with sanitized values/error messages.
-
-      async.parallel((err, results) => {
-        if (err) {
-          return next(err);
-        }
-
-        res.render("author_form", {
-          title: "Update Author",
-          author,
-          errors: errors.array(),
-        });
+      res.render("author_form", {
+        title: "Update Author",
+        author,
+        errors: errors.array(),
       });
       return;
     }

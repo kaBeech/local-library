@@ -174,29 +174,22 @@ exports.genre_delete_post = (req, res, next) => {
 // Display Genre update form on GET.
 exports.genre_update_get = (req, res, next) => {
   // Get genre for form.
-  async.parallel(
-    {
-      genre(callback) {
-        Genre.findById(req.params.id).exec(callback);
-      },
-    },
-    (err, results) => {
-      if (err) {
-        return next(err);
-      }
-      if (results.genre == null) {
-        // No results.
-        const err = new Error("Genre not found");
-        err.status = 404;
-        return next(err);
-      }
-      // Success.
-      res.render("genre_form", {
-        title: "Update Genre",
-        genre: results.genre,
-      });
+  Genre.findById(req.params.id).exec((err, results) => {
+    if (err) {
+      return next(err);
     }
-  );
+    if (results.genre == null) {
+      // No results.
+      const err = new Error("Genre not found");
+      err.status = 404;
+      return next(err);
+    }
+    // Success.
+    res.render("genre_form", {
+      title: "Update Genre",
+      genre: results.genre,
+    });
+  });
 };
 
 // Handle genre update on POST.
@@ -217,17 +210,10 @@ exports.genre_update_post = [
 
     if (!errors.isEmpty()) {
       // There are errors. Render form again with sanitized values/error messages.
-
-      async.parallel((err, results) => {
-        if (err) {
-          return next(err);
-        }
-
-        res.render("genre_form", {
-          title: "Update Genre",
-          genre,
-          errors: errors.array(),
-        });
+      res.render("genre_form", {
+        title: "Update Genre",
+        genre,
+        errors: errors.array(),
       });
       return;
     }

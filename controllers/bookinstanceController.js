@@ -115,13 +115,9 @@ exports.bookinstance_create_post = [
 
 // Display Book Instance delete form on GET.
 exports.bookinstance_delete_get = (req, res, next) => {
-  async.parallel(
-    {
-      bookinstance(callback) {
-        BookInstance.findById(req.params.id).exec(callback);
-      },
-    },
-    (err, results) => {
+  BookInstance.findById(req.params.id)
+    .populate("book")
+    .exec(function (err, bookinstance) {
       if (err) {
         return next(err);
       }
@@ -134,8 +130,7 @@ exports.bookinstance_delete_get = (req, res, next) => {
         title: "Delete Book Instance",
         bookinstance: results.bookinstance,
       });
-    }
-  );
+    });
 };
 
 // Handle Book Instance delete on POST.
@@ -251,6 +246,11 @@ exports.bookinstance_update_post = [
       // Get all books for form.
       async.parallel(
         {
+          bookinstance(callback) {
+            BookInstance.findById(req.params.id)
+              .populate("book")
+              .exec(callback);
+          },
           books(callback) {
             Book.find(callback);
           },
@@ -262,9 +262,9 @@ exports.bookinstance_update_post = [
 
           res.render("bookinstance_form", {
             title: "Update Book Instance",
-            book_list: results.book_list,
-            selected_book: results.book,
-            selected_status: results.status,
+            book_list: results.books,
+            selected_book: bookinstance.book,
+            selected_status: bookinstance.status,
             bookinstance,
             errors: errors.array(),
           });
