@@ -184,14 +184,6 @@ exports.bookinstance_update_get = (req, res, next) => {
         return next(err);
       }
       // Success.
-      // // Mark our selected genres as checked.
-      // for (const genre of results.genres) {
-      //   for (const bookGenre of results.book.genre) {
-      //     if (genre._id.toString() === bookGenre._id.toString()) {
-      //       genre.checked = "true";
-      //     }
-      //   }
-      // }
       res.render("bookinstance_form", {
         title: "Update Book Instance",
         book_list: results.books,
@@ -242,7 +234,6 @@ exports.bookinstance_update_post = [
 
     if (!errors.isEmpty()) {
       // There are errors. Render form again with sanitized values/error messages.
-
       // Get all books for form.
       async.parallel(
         {

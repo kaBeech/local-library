@@ -99,7 +99,6 @@ exports.author_create_post = [
       return;
     }
     // Data from form is valid.
-
     // Create an Author object with escaped and trimmed data.
     const author = new Author({
       first_name: req.body.first_name,

@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const Book = require("../models/book");
 const Genre = require("../models/genre");
 
-// Display list of all Genre.
+// Display list of all Genres.
 exports.genre_list = function (req, res, next) {
   Genre.find()
     .sort([["name", "ascending"]])
