@@ -121,14 +121,14 @@ exports.bookinstance_delete_get = (req, res, next) => {
       if (err) {
         return next(err);
       }
-      if (results.bookinstance == null) {
+      if (bookinstance == null) {
         // No results.
         res.redirect("/catalog/bookinstances");
       }
       // Successful, so render.
       res.render("bookinstance_delete", {
         title: "Delete Book Instance",
-        bookinstance: results.bookinstance,
+        bookinstance,
       });
     });
 };

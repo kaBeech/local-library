@@ -174,11 +174,11 @@ exports.genre_delete_post = (req, res, next) => {
 // Display Genre update form on GET.
 exports.genre_update_get = (req, res, next) => {
   // Get genre for form.
-  Genre.findById(req.params.id).exec((err, results) => {
+  Genre.findById(req.params.id).exec((err, genre) => {
     if (err) {
       return next(err);
     }
-    if (results.genre == null) {
+    if (genre == null) {
       // No results.
       const err = new Error("Genre not found");
       err.status = 404;
@@ -187,7 +187,7 @@ exports.genre_update_get = (req, res, next) => {
     // Success.
     res.render("genre_form", {
       title: "Update Genre",
-      genre: results.genre,
+      genre,
     });
   });
 };
