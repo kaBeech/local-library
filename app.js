@@ -8,8 +8,11 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const catalogRouter = require("./routes/catalog"); //Import routes for "catalog" area of site
 const compression = require("compression");
+const helmet = require("helmet");
 
 const app = express();
+
+app.use(helmet());
 
 // Set up mongoose connection
 const mongoose = require("mongoose");
