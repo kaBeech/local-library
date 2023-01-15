@@ -1,4 +1,5 @@
 const { body, validationResult } = require("express-validator");
+const debug = require("debug")("book");
 
 const Author = require("../models/author");
 const Genre = require("../models/genre");
@@ -43,6 +44,7 @@ exports.book_list = function (req, res, next) {
     .populate("author")
     .exec(function (err, list_books) {
       if (err) {
+        debug(`list error: ${err}`);
         return next(err);
       }
       //Successful, so render
@@ -66,6 +68,7 @@ exports.book_detail = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
+        debug(`detail error: ${err}`);
         return next(err);
       }
       if (results.book == null) {
@@ -98,6 +101,7 @@ exports.book_create_get = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
+        debug(`create error: ${err}`);
         return next(err);
       }
       res.render("book_form", {
@@ -164,6 +168,7 @@ exports.book_create_post = [
         },
         (err, results) => {
           if (err) {
+            debug(`create error: ${err}`);
             return next(err);
           }
 
@@ -188,6 +193,7 @@ exports.book_create_post = [
     // Data from form is valid. Save book.
     book.save((err) => {
       if (err) {
+        debug(`create error: ${err}`);
         return next(err);
       }
       // Successful: redirect to new book record.
@@ -209,6 +215,7 @@ exports.book_delete_get = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
+        debug(`delete error: ${err}`);
         return next(err);
       }
       if (results.book == null) {
@@ -238,6 +245,7 @@ exports.book_delete_post = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
+        debug(`delete error: ${err}`);
         return next(err);
       }
       // Success
@@ -253,6 +261,7 @@ exports.book_delete_post = (req, res, next) => {
       // Book has no book instances. Delete object and redirect to the list of books.
       Book.findByIdAndRemove(req.body.bookid, (err) => {
         if (err) {
+          debug(`delete error: ${err}`);
           return next(err);
         }
         // Success - go to book list
@@ -282,6 +291,7 @@ exports.book_update_get = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
+        debug(`update error: ${err}`);
         return next(err);
       }
       if (results.book == null) {
@@ -365,6 +375,7 @@ exports.book_update_post = [
         },
         (err, results) => {
           if (err) {
+            debug(`update error: ${err}`);
             return next(err);
           }
 
@@ -389,6 +400,7 @@ exports.book_update_post = [
     // Data from form is valid. Update the record.
     Book.findByIdAndUpdate(req.params.id, book, {}, (err, thebook) => {
       if (err) {
+        debug(`update error: ${err}`);
         return next(err);
       }
 

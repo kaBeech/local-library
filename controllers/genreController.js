@@ -1,6 +1,7 @@
 const async = require("async");
 const { body, validationResult } = require("express-validator");
-const mongoose = require("mongoose");
+const debug = require("debug")("genre");
+// const mongoose = require("mongoose");
 
 const Book = require("../models/book");
 const Genre = require("../models/genre");
@@ -11,6 +12,7 @@ exports.genre_list = function (req, res, next) {
     .sort([["name", "ascending"]])
     .exec(function (err, list_genre) {
       if (err) {
+        debug(`list error: ${err}`);
         return next(err);
       }
       //Successful, so render
@@ -23,7 +25,7 @@ exports.genre_list = function (req, res, next) {
 
 // Display detail page for a specific Genre.
 exports.genre_detail = (req, res, next) => {
-  const id = mongoose.Types.ObjectId(req.params.id);
+  // const id = mongoose.Types.ObjectId(req.params.id);
   async.parallel(
     {
       genre(callback) {
@@ -36,6 +38,7 @@ exports.genre_detail = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
+        debug(`detail error: ${err}`);
         return next(err);
       }
       if (results.genre == null) {
@@ -85,6 +88,7 @@ exports.genre_create_post = [
       // Check if Genre with same name already exists.
       Genre.findOne({ name: req.body.name }).exec((err, found_genre) => {
         if (err) {
+          debug(`create error: ${err}`);
           return next(err);
         }
 
@@ -94,6 +98,7 @@ exports.genre_create_post = [
         } else {
           genre.save((err) => {
             if (err) {
+              debug(`create error: ${err}`);
               return next(err);
             }
             // Genre saved. Redirect to genre detail page.
@@ -118,6 +123,7 @@ exports.genre_delete_get = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
+        debug(`delete error: ${err}`);
         return next(err);
       }
       if (results.genre == null) {
@@ -147,6 +153,7 @@ exports.genre_delete_post = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
+        debug(`delete error: ${err}`);
         return next(err);
       }
       // Success
@@ -162,6 +169,7 @@ exports.genre_delete_post = (req, res, next) => {
       // Genre has no books. Delete object and redirect to the list of genres.
       Genre.findByIdAndRemove(req.body.genreid, (err) => {
         if (err) {
+          debug(`delete error: ${err}`);
           return next(err);
         }
         // Success - go to genre list
@@ -176,6 +184,7 @@ exports.genre_update_get = (req, res, next) => {
   // Get genre for form.
   Genre.findById(req.params.id).exec((err, genre) => {
     if (err) {
+      debug(`update error: ${err}`);
       return next(err);
     }
     if (genre == null) {
@@ -221,6 +230,7 @@ exports.genre_update_post = [
     // Data from form is valid. Update the record.
     Genre.findByIdAndUpdate(req.params.id, genre, {}, (err, thegenre) => {
       if (err) {
+        debug(`update error: ${err}`);
         return next(err);
       }
 

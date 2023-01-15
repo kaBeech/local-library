@@ -1,5 +1,6 @@
 const async = require("async");
 const { body, validationResult } = require("express-validator");
+const debug = require("debug")("bookInstance");
 
 const Book = require("../models/book");
 const BookInstance = require("../models/bookinstance");
@@ -11,6 +12,7 @@ exports.bookinstance_list = function (req, res, next) {
     .sort([["book", "ascending"]])
     .exec(function (err, list_bookinstances) {
       if (err) {
+        debug(`list error: ${err}`);
         return next(err);
       }
       // Successful, so render
@@ -27,6 +29,7 @@ exports.bookinstance_detail = (req, res, next) => {
     .populate("book")
     .exec((err, bookinstance) => {
       if (err) {
+        debug(`detail error: ${err}`);
         return next(err);
       }
       if (bookinstance == null) {
@@ -47,6 +50,7 @@ exports.bookinstance_detail = (req, res, next) => {
 exports.bookinstance_create_get = (req, res, next) => {
   Book.find({}, "title").exec((err, books) => {
     if (err) {
+      debug(`create error: ${err}`);
       return next(err);
     }
     // Successful, so render.
@@ -88,6 +92,7 @@ exports.bookinstance_create_post = [
       // There are errors. Render form again with sanitized values and error messages.
       Book.find({}, "title").exec(function (err, books) {
         if (err) {
+          debug(`create error: ${err}`);
           return next(err);
         }
         // Successful, so render.
@@ -105,6 +110,7 @@ exports.bookinstance_create_post = [
     // Data from form is valid.
     bookinstance.save((err) => {
       if (err) {
+        debug(`create error: ${err}`);
         return next(err);
       }
       // Successful: redirect to new record.
@@ -119,6 +125,7 @@ exports.bookinstance_delete_get = (req, res, next) => {
     .populate("book")
     .exec(function (err, bookinstance) {
       if (err) {
+        debug(`delete error: ${err}`);
         return next(err);
       }
       if (bookinstance == null) {
@@ -146,12 +153,14 @@ exports.bookinstance_delete_post = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
+        debug(`delete error: ${err}`);
         return next(err);
       }
       // Success
       // Delete object and redirect to the list of bookinstances.
       BookInstance.findByIdAndRemove(req.body.bookinstanceid, (err) => {
         if (err) {
+          debug(`delete error: ${err}`);
           return next(err);
         }
         // Success - go to bookinstance list
@@ -175,6 +184,7 @@ exports.bookinstance_update_get = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
+        debug(`update error: ${err}`);
         return next(err);
       }
       if (results.bookinstance == null) {
@@ -248,6 +258,7 @@ exports.bookinstance_update_post = [
         },
         (err, results) => {
           if (err) {
+            debug(`update error: ${err}`);
             return next(err);
           }
 
@@ -271,6 +282,7 @@ exports.bookinstance_update_post = [
       {},
       (err, thebookinstance) => {
         if (err) {
+          debug(`update error: ${err}`);
           return next(err);
         }
 

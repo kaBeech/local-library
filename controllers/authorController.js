@@ -1,5 +1,6 @@
 const async = require("async");
 const { body, validationResult } = require("express-validator");
+const debug = require("debug")("author");
 
 const Book = require("../models/book");
 const Author = require("../models/author");
@@ -10,6 +11,7 @@ exports.author_list = function (req, res, next) {
     .sort([["family_name", "ascending"]])
     .exec(function (err, list_authors) {
       if (err) {
+        debug(`list error: ${err}`);
         return next(err);
       }
       //Successful, so render
@@ -34,6 +36,7 @@ exports.author_detail = (req, res, next) => {
     (err, results) => {
       if (err) {
         // Error in API usage.
+        debug(`detail error: ${err}`);
         return next(err);
       }
       if (results.author == null) {
@@ -108,6 +111,7 @@ exports.author_create_post = [
     });
     author.save((err) => {
       if (err) {
+        debug(`create error: ${err}`);
         return next(err);
       }
       // Successful - redirect to new author record.
@@ -129,6 +133,7 @@ exports.author_delete_get = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
+        debug(`delete error: ${err}`);
         return next(err);
       }
       if (results.author == null) {
@@ -158,6 +163,7 @@ exports.author_delete_post = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
+        debug(`delete error: ${err}`);
         return next(err);
       }
       // Success
@@ -173,6 +179,7 @@ exports.author_delete_post = (req, res, next) => {
       // Author has no books. Delete object and redirect to the list of authors.
       Author.findByIdAndRemove(req.body.authorid, (err) => {
         if (err) {
+          debug(`delete error: ${err}`);
           return next(err);
         }
         // Success - go to author list
@@ -187,6 +194,7 @@ exports.author_update_get = (req, res, next) => {
   // Get author for form.
   Author.findById(req.params.id).exec(function (err, author) {
     if (err) {
+      debug(`update error: ${err}`);
       return next(err);
     }
     if (author == null) {
@@ -258,6 +266,7 @@ exports.author_update_post = [
     // Data from form is valid. Update the record.
     Author.findByIdAndUpdate(req.params.id, author, {}, (err, theauthor) => {
       if (err) {
+        debug(`update error: ${err}`);
         return next(err);
       }
 
