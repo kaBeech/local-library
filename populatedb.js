@@ -120,7 +120,7 @@ function createGenreAuthors(cb) {
         authorCreate("Bob", "Billings", false, false, callback);
       },
       function (callback) {
-        authorCreate("Jim", "Jones", "1971-12-16", false, callback);
+        authorCreate("Glenda", "Gilbertson", "1971-12-16", false, callback);
       },
       function (callback) {
         genreCreate("Fantasy", callback);
